@@ -35,15 +35,18 @@ class Record:
             if p.value == old_phone:
                 self.phones[i] = Phone(new_phone)
                 break
+        raise ValueError('Record not found.')    
+        
 
-    def find_phone(self, phone):
-        return any(p.value == phone for p in self.phones)
+    def find_phones(self, phone):
+        return next((p for p in self.phones if p.value == phone), None)
 
 
     def __str__(self):
         phones_str = '; '.join(p.value for p in self.phones)
 
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+    
 
 class AddressBook(UserDict):
     def add_record(self, record):
@@ -58,6 +61,16 @@ class AddressBook(UserDict):
 
     def __str__(self):
         return '\n'.join(str(record) for record in self.data.values())
+    
+    def find(self, name):
+        return self.data[name]
+    
+    def delete(self, name):
+        if name in self.data:
+            del self.data[name]
+        else:
+            raise ValueError('No record.')
+
     
 if __name__ == "__main__":
     address_book = AddressBook()
